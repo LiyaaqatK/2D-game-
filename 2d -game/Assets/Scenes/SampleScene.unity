@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 173799524}
   - component: {fileID: 173799523}
   m_Layer: 6
-  m_Name: Square
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -268,6 +268,9 @@ GameObject:
   - component: {fileID: 362589136}
   - component: {fileID: 362589137}
   - component: {fileID: 362589138}
+  - component: {fileID: 362589139}
+  - component: {fileID: 362589140}
+  - component: {fileID: 362589141}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -403,7 +406,7 @@ Transform:
   m_GameObject: {fileID: 362589131}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.254, y: -0.834, z: 0}
+  m_LocalPosition: {x: -3.254, y: -0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -448,6 +451,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aaf6aee1ef8d4643b5bf1855595ec18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &362589139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362589131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7334d6a93fab364a98a7afe3357cfd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkGroundDistance: 1.1
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &362589140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362589131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dbd18f3418dea6429682b2f9783d83e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRb: {fileID: 362589133}
+--- !u!114 &362589141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362589131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c581f9dc8a0f5446a50acf27d5c0337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRb: {fileID: 362589133}
+  isSliding: 0
+  slideForce: 12
+  slideDuration: 0.4
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

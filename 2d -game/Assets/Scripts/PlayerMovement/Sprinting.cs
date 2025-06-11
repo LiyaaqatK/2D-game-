@@ -30,7 +30,7 @@ public class Sprinting : MonoBehaviour
     public float GetSpeedMultiplier()
     {
         if (isSprinting)
-            return defaultMovementMultiplier * 2;
+            return defaultMovementMultiplier * 2.5f;
         else
             return defaultMovementMultiplier;
     }
