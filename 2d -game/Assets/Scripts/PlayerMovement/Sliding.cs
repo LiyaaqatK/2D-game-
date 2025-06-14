@@ -66,14 +66,14 @@ public class Sliding : MonoBehaviour
         }
         playerRb.AddForce(new Vector2(direction * slideForce, 0), ForceMode2D.Impulse);
 
-        Debug.Log("Player has started sliding.");
+        Debug.Log("Player started sliding.");
     }
     
     private void EndSlide()
     {
         isSliding = false;
 
-        Debug.Log("Player stoped slide.");
+        Debug.Log("Player stopped slide.");
     }
 
 }
