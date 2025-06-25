@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Camera camera;
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
 
@@ -10,13 +11,14 @@ public class Player : MonoBehaviour
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
+    public PlayerMoveBackwards moveBackWards { get; private set; }
 
     public Vector2 moveImput { get; private set; }
 
     [Header("Movement Details")]
     public float moveSpeed;
-
-    private bool facingRight = true;
+    public bool facingRight = true;
+  
 
 
 
@@ -27,8 +29,8 @@ public class Player : MonoBehaviour
         input = new PlayerInputSet();
         stateMachine = new StateMachine();
         idleState = new PlayerIdleState(this, stateMachine, "idle");
-        moveState = new PlayerMoveState(this, stateMachine, "move");
-
+        moveState = new PlayerMoveState(this, stateMachine, "moveForward");
+        moveBackWards = new PlayerMoveBackwards(this, stateMachine, "moveBackwards");
 
     }
 
@@ -53,29 +55,33 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.UpdateActiveState();
+        flipController();
+    }
+
+    public void flipController()
+    {
+
+        Vector2 playerPos = this.transform.position;
+        Vector2 mousePos = Input.mousePosition;
+        mousePos = camera.ScreenToWorldPoint(mousePos);
+        float mousePosX = mousePos.x - playerPos.x;
+        if(mousePosX > 0)
+        {
+            this.transform.eulerAngles = new Vector3(0, 0, 0);
+            facingRight = true;
+        }
+        else if (mousePosX < 0)
+        {
+            this.transform.eulerAngles = new Vector3(0, 180f, 0);
+            facingRight = false;
+        }
+
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
-        HandleFlip(xVelocity);
     }
 
-    private void HandleFlip(float xVelocity)
-    {
-        if(xVelocity > 0 && facingRight == false)
-        {
-            Flip();
-        }
-        else if (xVelocity < 0 && facingRight == true)
-        {
-            Flip();
-        }
-    }
 
-    private void Flip()
-    {
-        transform.Rotate(0, 180, 0);
-        facingRight = !facingRight;
-    }
 }
