@@ -26,7 +26,7 @@ public abstract class EntityState
 
     public virtual void Update()
     {
-        Debug.Log("I am in the state : " + animBoolName);
+        
     }
 
     public virtual void Exit()

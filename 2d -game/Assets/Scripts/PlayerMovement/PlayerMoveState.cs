@@ -13,6 +13,7 @@ public class PlayerMoveState : EntityState
         {
             stateMchine.ChangeState(player.idleState);
         }
+
         player.SetVelocity(player.moveImput.x * player.moveSpeed, rb.linearVelocity.y);
         
     }
