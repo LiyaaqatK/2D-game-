@@ -13,7 +13,10 @@ public class PlayerMoveState : EntityState
         {
             stateMchine.ChangeState(player.idleState);
         }
-
+        if (player.moveImput.x > 0 && player.facingRight == false || player.moveImput.x < 0 && player.facingRight == true)
+        {
+            stateMchine.ChangeState(player.moveBackWards);
+        }
         player.SetVelocity(player.moveImput.x * player.moveSpeed, rb.linearVelocity.y);
         
     }
