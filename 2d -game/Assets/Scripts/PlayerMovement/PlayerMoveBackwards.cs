@@ -14,6 +14,10 @@ public class PlayerMoveBackwards : EntityState
             stateMchine.ChangeState(player.idleState);
         }
 
+        if(player.moveImput.x > 0 && player.facingRight == true|| player.moveImput.x < 0 && player.facingRight == false)
+        {
+            stateMchine.ChangeState(player.moveState);
+        }
         player.SetVelocity(player.moveImput.x * player.moveSpeed, rb.linearVelocity.y);
 
     }

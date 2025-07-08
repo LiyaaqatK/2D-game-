@@ -18,12 +18,9 @@ public class PlayerIdleState : EntityState
         else if (player.moveImput.x == -1 && player.facingRight || player.moveImput.x == 1 && !player.facingRight)
         {
             //Debug.Log("Running backwards");
-            
 
             stateMchine.ChangeState(player.moveBackWards);
-        }
-        Debug.Log("Player input is : " + player.moveImput.x);
-
+        }        
 
     }
 

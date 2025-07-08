@@ -1,8 +1,22 @@
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Player : MonoBehaviour
 {
-    public Camera camera;
+    [Header("Look")]
+    [SerializeField]
+    private Transform _headWrapper;
+    [SerializeField]
+    private float _topAngleLimit = 40f;
+    [SerializeField]
+    private float _bottonAngleLimit = -20f;
+    [SerializeField]
+    private bool _flipTowardsMouse = true;
+
+
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
 
@@ -14,6 +28,8 @@ public class Player : MonoBehaviour
     public PlayerMoveBackwards moveBackWards { get; private set; }
 
     public Vector2 moveImput { get; private set; }
+
+    public Vector2 _mouseWorldPos;
 
     [Header("Movement Details")]
     public float moveSpeed;
@@ -44,35 +60,62 @@ public class Player : MonoBehaviour
         input.Enable();
         input.Player.Movement.performed += ctx => moveImput = ctx.ReadValue<Vector2>();
         input.Player.Movement.canceled += ctx => moveImput = Vector2.zero;
+        
     }
 
     private void Start()
     {
         stateMachine.Initialize(idleState);
-
     }
+
+
 
     private void Update()
     {
-        stateMachine.UpdateActiveState();
         flipController();
+        OnLook();
+        stateMachine.UpdateActiveState();        
+        lookAtMouse();
     }
+
+    private void OnLook()
+    {
+        _mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Debug.Log("Does mose ever run");
+    }
+
+
+    private void lookAtMouse()
+    {
+        var direction = (_mouseWorldPos - (Vector2)_headWrapper.position).normalized;
+        if(_flipTowardsMouse)
+        {
+            transform.localScale = new Vector3(Mathf.Sign(moveImput.x), 1, 1);
+        }
+        _headWrapper.right = direction * Mathf.Sign(transform.localScale.x);
+        var eulerDir = _headWrapper.localEulerAngles;
+        eulerDir.z = Mathf.Clamp(eulerDir.z - (eulerDir.z > 180 ? 360 : 0), _bottonAngleLimit, _topAngleLimit);
+        _headWrapper.localEulerAngles = eulerDir;
+    }
+
+
+
 
     public void flipController()
     {
 
         Vector2 playerPos = this.transform.position;
         Vector2 mousePos = Input.mousePosition;
-        mousePos = camera.ScreenToWorldPoint(mousePos);
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
         float mousePosX = mousePos.x - playerPos.x;
         if(mousePosX > 0)
         {
-            this.transform.eulerAngles = new Vector3(0, 0, 0);
+            transform.localScale = new Vector3(Mathf.Sign(1), 1, 1);
             facingRight = true;
         }
         else if (mousePosX < 0)
         {
-            this.transform.eulerAngles = new Vector3(0, 180f, 0);
+            transform.localScale = new Vector3(Mathf.Sign(-1), 1, 1);
             facingRight = false;
         }
 
