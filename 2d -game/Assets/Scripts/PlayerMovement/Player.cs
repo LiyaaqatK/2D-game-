@@ -6,9 +6,14 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Player : MonoBehaviour
 {
+
+    public GameObject bullet;
+    public Transform bulletSpawnPoint;
     [Header("Look")]
     [SerializeField]
     private Transform _headWrapper;
+    [SerializeField]
+    private Transform _WeaponWrapper;
     [SerializeField]
     private float _topAngleLimit = 40f;
     [SerializeField]
@@ -76,26 +81,34 @@ public class Player : MonoBehaviour
         OnLook();
         stateMachine.UpdateActiveState();        
         lookAtMouse();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Instantiate(bullet, bulletSpawnPoint.position, Quaternion.identity);
+            Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        }
     }
 
     private void OnLook()
     {
-        _mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Debug.Log("Does mose ever run");
+        _mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);        
     }
 
 
     private void lookAtMouse()
     {
         var direction = (_mouseWorldPos - (Vector2)_headWrapper.position).normalized;
-        if(_flipTowardsMouse)
+        var headdirection = (_mouseWorldPos - (Vector2)_WeaponWrapper.position).normalized;
+        if (_flipTowardsMouse)
         {
             transform.localScale = new Vector3(Mathf.Sign(moveImput.x), 1, 1);
         }
         _headWrapper.right = direction * Mathf.Sign(transform.localScale.x);
+        _WeaponWrapper.right = headdirection * Mathf.Sign(transform.localScale.x);
         var eulerDir = _headWrapper.localEulerAngles;
         eulerDir.z = Mathf.Clamp(eulerDir.z - (eulerDir.z > 180 ? 360 : 0), _bottonAngleLimit, _topAngleLimit);
         _headWrapper.localEulerAngles = eulerDir;
+        //_WeaponWrapper.localEulerAngles = eulerDir;
     }
 
 
@@ -126,5 +139,9 @@ public class Player : MonoBehaviour
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
 
+    
 
 }
+
+
+
