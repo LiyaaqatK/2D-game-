@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMoveBackwards : EntityState
+public class PlayerMoveBackwards : PlayerGroundedState
 {
     public PlayerMoveBackwards(Player player, StateMachine stateMchine, string animBoolName) : base(stateMchine, animBoolName, player)
     {

@@ -1,29 +1,25 @@
 using UnityEngine;
 
-public class Jumping : MonoBehaviour
+public class Jumping : PlayerAirState
 {
-    public Rigidbody2D playerRb;
-    [SerializeField] private float jumpForce = 5.0f;
-    private CollsionGroundCheck groundCheck; //CollisionGroundCheck script
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private bool groundCheck = true;
+    public Jumping(Player player, StateMachine stateMchine, string animBoolName) : base(stateMchine, animBoolName, player)
     {
-        playerRb = GetComponent<Rigidbody2D>();
-        groundCheck = GetComponent<CollsionGroundCheck>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {     
-        Jump();
-    }
-    private void Jump()
+    public override void Enter()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && groundCheck.IsGrounded)
+        base.Enter();
+
+        player.SetVelocity(rb.linearVelocity.x, player.jumpForce);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if(rb.linearVelocity.y < 0)
         {
-                playerRb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);   
+            stateMchine.ChangeState(player.playerFalling);
         }
     }
 
