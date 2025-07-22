@@ -1,11 +1,16 @@
 using UnityEngine;
 
-public class PlayerIdleState : EntityState
+public class PlayerIdleState : PlayerGroundedState
 {
     public PlayerIdleState(Player player, StateMachine stateMchine, string stateName) : base(stateMchine, stateName, player)
     {
     }
 
+    public override void Enter()
+    {
+        base.Enter();
+        player.SetVelocity(0, rb.linearVelocity.y);
+    }
 
     public override void Update()
     {
@@ -20,7 +25,8 @@ public class PlayerIdleState : EntityState
             //Debug.Log("Running backwards");
 
             stateMchine.ChangeState(player.moveBackWards);
-        }        
+        }
+
 
     }
 

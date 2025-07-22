@@ -1,3 +1,4 @@
+using System.Net;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,8 @@ public class Player : MonoBehaviour
     private float _bottonAngleLimit = -20f;
     [SerializeField]
     private bool _flipTowardsMouse = true;
+    [SerializeField]
+    public Transform endPoint;
 
 
     public Animator anim { get; private set; }
@@ -32,6 +35,9 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerMoveBackwards moveBackWards { get; private set; }
 
+    public Jumping jumping { get; private set; }
+    public PlayerFalling playerFalling { get; private set; }
+
     public Vector2 moveImput { get; private set; }
 
     public Vector2 _mouseWorldPos;
@@ -39,7 +45,17 @@ public class Player : MonoBehaviour
     [Header("Movement Details")]
     public float moveSpeed;
     public bool facingRight = true;
-  
+    public float jumpForce = 8.0f;
+    [Range(0,1)]
+    public float inAirMoveForce = 0.7f;
+
+    [Header("Collision dectection")]
+    [SerializeField]
+    private float groundCheckDistance;
+    [SerializeField]
+    private LayerMask whatIsGround;
+    public bool groundDetected;
+
 
 
 
@@ -52,6 +68,8 @@ public class Player : MonoBehaviour
         idleState = new PlayerIdleState(this, stateMachine, "idle");
         moveState = new PlayerMoveState(this, stateMachine, "moveForward");
         moveBackWards = new PlayerMoveBackwards(this, stateMachine, "moveBackwards");
+        jumping = new Jumping(this, stateMachine, "jumpFall");
+        playerFalling = new PlayerFalling(this, stateMachine, "jumpFall");
 
     }
 
@@ -79,6 +97,7 @@ public class Player : MonoBehaviour
     {
         flipController();
         OnLook();
+        HandleCollectionDetection();
         stateMachine.UpdateActiveState();        
         lookAtMouse();
 
@@ -139,7 +158,17 @@ public class Player : MonoBehaviour
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
 
-    
+    private void HandleCollectionDetection()
+    {
+        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround );
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
+    }
+
+
 
 }
 
