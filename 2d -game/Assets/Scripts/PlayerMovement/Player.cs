@@ -5,10 +5,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
-
-    public GameObject bullet;
     public Transform bulletSpawnPoint;
     [Header("Look")]
     [SerializeField]
@@ -25,11 +23,8 @@ public class Player : MonoBehaviour
     public Transform endPoint;
 
 
-    public Animator anim { get; private set; }
-    public Rigidbody2D rb { get; private set; }
-
     private PlayerInputSet input;
-    private StateMachine stateMachine;
+
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
@@ -42,27 +37,18 @@ public class Player : MonoBehaviour
 
     public Vector2 _mouseWorldPos;
 
+
     [Header("Movement Details")]
     public float moveSpeed;
     public bool facingRight = true;
     public float jumpForce = 8.0f;
-    [Range(0,1)]
+    [Range(0, 1)]
     public float inAirMoveForce = 0.7f;
 
-    [Header("Collision dectection")]
-    [SerializeField]
-    private float groundCheckDistance;
-    [SerializeField]
-    private LayerMask whatIsGround;
-    public bool groundDetected;
-
-
-
-
-    private void Awake()
+    protected override void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+        base.Awake();
+
         input = new PlayerInputSet();
         stateMachine = new StateMachine();
         idleState = new PlayerIdleState(this, stateMachine, "idle");
@@ -70,9 +56,9 @@ public class Player : MonoBehaviour
         moveBackWards = new PlayerMoveBackwards(this, stateMachine, "moveBackwards");
         jumping = new Jumping(this, stateMachine, "jumpFall");
         playerFalling = new PlayerFalling(this, stateMachine, "jumpFall");
-
     }
 
+    
     private void OnDisable()
     {
         input.Disable();
@@ -83,11 +69,13 @@ public class Player : MonoBehaviour
         input.Enable();
         input.Player.Movement.performed += ctx => moveImput = ctx.ReadValue<Vector2>();
         input.Player.Movement.canceled += ctx => moveImput = Vector2.zero;
-        
-    }
 
-    private void Start()
+    }
+    
+    
+    protected override void Start()
     {
+        base.Start();
         stateMachine.Initialize(idleState);
     }
 
@@ -152,24 +140,6 @@ public class Player : MonoBehaviour
         }
 
     }
-
-    public void SetVelocity(float xVelocity, float yVelocity)
-    {
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
-    }
-
-    private void HandleCollectionDetection()
-    {
-        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround );
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
-    }
-
-
-
 }
 
 
