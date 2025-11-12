@@ -16,16 +16,18 @@ public class BulletLogic : MonoBehaviour
     }
     void Start()
     {
-        
+
         rb = GetComponent<Rigidbody2D>();
+       
     }
 
     // Update is called once per frame
     void Update()
-    {        
-        rb.AddForce(transform.up * bulletSpeed, ForceMode2D.Impulse);        
+    {
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.AddForce(transform.up * bulletSpeed, ForceMode2D.Impulse);
         StartCoroutine("WaitAndPrint");
-        
+
     }
 
     IEnumerator WaitAndPrint()
@@ -34,4 +36,5 @@ public class BulletLogic : MonoBehaviour
         yield return new WaitForSeconds(2);
         Destroy(gameObject);
     }
+    
 }

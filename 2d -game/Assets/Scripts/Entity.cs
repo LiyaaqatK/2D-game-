@@ -36,10 +36,10 @@ public class Entity : MonoBehaviour
     {
 
     }
-    private void Update()
+    protected virtual void Update()
     {
         
-        HandleCollectionDetection();
+        
         stateMachine.UpdateActiveState(); 
                
         
@@ -50,9 +50,11 @@ public class Entity : MonoBehaviour
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
     }
 
+
+    //referenced in player and enmey script
     protected void HandleCollectionDetection()
     {
-        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround );
+        groundDetected = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
     }
 
     private void OnDrawGizmos()

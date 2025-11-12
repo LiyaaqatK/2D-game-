@@ -81,7 +81,7 @@ public class Player : Entity
 
 
 
-    private void Update()
+    protected override void Update()
     {
         flipController();
         OnLook();
